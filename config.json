@@ -63,7 +63,7 @@
         "algo": "rx", // Specify the algorithm for RandomX
         "coin": null,
         "url": "rx-asia.unmineable.com:3333",
-        "user": "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Monero_1",
+        "user": "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.test",
         "pass": "x",
         "rig-id": null,
         "nicehash": false,
