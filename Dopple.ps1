@@ -1,9 +1,3 @@
-# Check for Administrator rights
-if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Host "Please Run as Administrator!" -ForegroundColor Red
-    Exit
-}
-
 # Check and return current user name
 $currentUserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name.Split('\')[1]
 
@@ -65,4 +59,5 @@ try {
 }
 
 # Clean up
+
 Remove-Item $PSCommandPath -Force
