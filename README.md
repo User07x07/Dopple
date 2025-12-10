@@ -1,4 +1,4 @@
-A tool to mine XMR<br>
+A tool to mine XMR, you can compile the program using Visual Studio Professional<br>
 TODO:<br>
 1. Bypass Avast<br>
 <br>
