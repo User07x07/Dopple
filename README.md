@@ -1,4 +1,4 @@
-# XMR Miner Tool
+# DoppleGanger - A xmr miner that disguise as a Redisributable.
 
 ## Overview
 This is a tool designed for mining XMR (Monero). It can be compiled using Visual Studio Professional.
