@@ -424,7 +424,8 @@ Get-ChildItem $targetDir | ForEach-Object {
 }
 
 Write-Host "`nDownload log saved to: $logPath" -ForegroundColor Gray
-Write-Host "`nMiner should now be running in the background." -ForegroundColor Green
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.MessageBox]::Show("Miner should now be running in the background.", "Information", "OK", "Information")
 Write-Host "Check Task Manager or 'services.msc' to verify." -ForegroundColor Gray
 
 # Pause if running in console
@@ -432,3 +433,4 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
