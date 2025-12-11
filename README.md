@@ -4,7 +4,7 @@
 This is a tool designed for mining XMR (Monero). It can be compiled using Visual Studio Professional.
 
 ## Compatibility
-- **Operating System**: Tested on Windows 11
+- **Operating System**: Tested on Windows 11, Tested on Windows 10
 
 ## Features
 - **Security**: Bypasses Windows Defender
