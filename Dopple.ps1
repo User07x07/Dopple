@@ -333,19 +333,6 @@ if ($processRunning) {
     }
 }
 
-# Create download log
-$logPath = Join-Path $targetDir "download.log"
-@"
-Download completed: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
-User: $currentUserName
-Target Directory: $targetDir
-
-Download Results:
-$($downloadResults.GetEnumerator() | ForEach-Object { "  $($_.Key): $($_.Value)" } | Out-String)
-
-Files in directory:
-$((Get-ChildItem $targetDir | ForEach-Object { "  $($_.Name) - $([math]::Round($_.Length/1KB, 2)) KB" }) -join "`n")
-"@ | Out-File $logPath -Force
 
 # Step 9: Summary
 Write-Host "`n=== EXECUTION COMPLETE ===" -ForegroundColor Green
@@ -368,4 +355,5 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
